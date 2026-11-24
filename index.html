@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<title>daisyUI input selectors</title>
+<link id="css" href="https://cdn.jsdelivr.net/npm/daisyui@5.8.2/daisyui.css" rel="stylesheet">
+</head>
+<body>
+<p>CSS: <b id="state">daisyUI 5.8.2 as published</b></p>
+<p>Press "Switch the theme 20 times", then "Use the fix", then "Switch the theme 20 times" again.</p>
+<p>Style recalc per theme switch (median of 20): <b id="time">–</b></p>
+<button type="button" class="btn" id="run">Switch the theme 20 times</button>
+<button type="button" class="btn" id="fix">Use the fix</button>
+<table class="table"><tbody id="rows"></tbody></table>
+<script>
+  rows.innerHTML = Array.from({ length: 200 }, (_, i) => `<tr>
+    <td>Row ${i}</td>
+    <td><label class="input input-sm"><span class="label">Name</span><input type="text" value="Item ${i}"></label></td>
+    <td><input class="input input-sm" type="email" value="row${i}@example.com"></td>
+    <td><input class="input input-sm" type="number" value="${i}"></td>
+    <td><select class="select select-sm"><option>Draft</option><option>Active</option></select></td>
+    <td><button class="btn btn-sm btn-ghost">Edit</button></td>
+  </tr>`).join('');
+  const html = document.documentElement;
+  run.onclick = async () => {
+    const times = [];
+    for (let i = 0; i < 20; i++) {
+      html.dataset.theme = html.dataset.theme === 'light' ? 'dark' : 'light';
+      const start = performance.now();
+      getComputedStyle(document.body).color; // run the style recalc now, so the time includes it
+      times.push(performance.now() - start);
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    }
+    times.sort((a, b) => a - b);
+    time.textContent = `${times[10].toFixed(1)} ms`;
+  };
+  // daisyui-fix.css is the published file with the rules rewritten as in the pull request (see fix.py).
+  fix.onclick = () => {
+    const link = document.getElementById('css');
+    link.onload = () => { state.textContent = 'daisyUI 5.8.2 with the fix'; };
+    link.href = 'daisyui-fix.css';
+    fix.disabled = true;
+  };
+</script>
+</body>
+</html>
