@@ -21,8 +21,8 @@ def block_end(css, start):
 
 
 def flatten_rtl(css):
-    pattern = r":is\(([^()]*?)\[type=url\],([^()]*?)\[type=tel\],([^()]*?)\[type=email\],([^()]*?)\[type=number\]\):dir\(rtl\)"
-    repl = r"\1[type=url]:dir(rtl),\2[type=tel]:dir(rtl),\3[type=email]:dir(rtl),\4[type=number]:dir(rtl)"
+    pattern = r":is\(([^(),]*?)\[type=url\],\1\[type=tel\],\1\[type=email\],\1\[type=number\]\):dir\(rtl\)"
+    repl = rf"\1:is({TYPES}):dir(rtl)"
     return re.subn(pattern, repl, css)
 
 
