@@ -1,0 +1,30 @@
+/* Tailwind 4.3.5 build of the repro page, plus seven classes that copy daisyUI's input with @apply.
+   apply.css is built with daisyui 5.8.2, apply-fix.css with the pull request branch:
+   npx @tailwindcss/cli -m -i apply/app.css -o apply.css */
+@import "tailwindcss" source(none);
+@source "../index.html";
+@plugin "daisyui";
+
+@layer components {
+  .text-field {
+    @apply input;
+  }
+  .email-field {
+    @apply input;
+  }
+  .number-field {
+    @apply input;
+  }
+  .search-field {
+    @apply input;
+  }
+  .date-field {
+    @apply input;
+  }
+  .phone-field {
+    @apply input;
+  }
+  .url-field {
+    @apply input;
+  }
+}

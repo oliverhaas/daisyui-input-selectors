@@ -6,11 +6,17 @@
 <link id="css" href="https://cdn.jsdelivr.net/npm/daisyui@5.8.2/daisyui.css" rel="stylesheet">
 </head>
 <body>
-<p>CSS: <b id="state">daisyUI 5.8.2 as published</b></p>
-<p>Press "Switch the theme 20 times", then "Use the fix", then "Switch the theme 20 times" again.</p>
+<p>CSS: <b id="state">daisyUI 5.8.2 from the CDN</b></p>
+<p>Pick a CSS, then press "Switch the theme 20 times".</p>
+<p>The Tailwind builds only hold the classes this page uses, so they are faster than the CDN file. Compare each one with its fix.</p>
+<p>
+  <button type="button" class="btn btn-sm" data-css="https://cdn.jsdelivr.net/npm/daisyui@5.8.2/daisyui.css">daisyUI 5.8.2 from the CDN</button>
+  <button type="button" class="btn btn-sm" data-css="daisyui-fix.css">CDN file with the fix</button>
+  <button type="button" class="btn btn-sm" data-css="apply.css">Tailwind, 7× @apply input</button>
+  <button type="button" class="btn btn-sm" data-css="apply-fix.css">Tailwind, 7× @apply input, with the fix</button>
+</p>
 <p>Style recalc per theme switch (median of 20): <b id="time">–</b></p>
 <button type="button" class="btn" id="run">Switch the theme 20 times</button>
-<button type="button" class="btn" id="fix">Use the fix</button>
 <table class="table"><tbody id="rows"></tbody></table>
 <script>
   rows.innerHTML = Array.from({ length: 200 }, (_, i) => `<tr>
@@ -35,12 +41,14 @@
     time.textContent = `${times[10].toFixed(1)} ms`;
   };
   // daisyui-fix.css is the published file with the rules rewritten as in the pull request (see fix.py).
-  fix.onclick = () => {
-    const link = document.getElementById('css');
-    link.onload = () => { state.textContent = 'daisyUI 5.8.2 with the fix'; };
-    link.href = 'daisyui-fix.css';
-    fix.disabled = true;
-  };
+  // apply.css and apply-fix.css are Tailwind builds with seven @apply input copies (see apply/app.css).
+  for (const button of document.querySelectorAll('[data-css]')) {
+    button.onclick = () => {
+      const link = document.getElementById('css');
+      link.onload = () => { state.textContent = button.textContent; time.textContent = '–'; };
+      link.href = button.dataset.css;
+    };
+  }
 </script>
 </body>
 </html>
